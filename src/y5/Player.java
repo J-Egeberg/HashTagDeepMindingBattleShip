@@ -80,7 +80,7 @@ public class Player implements BattleshipsPlayer {
                 } while (spotIsNotAvailable);
                 
                 for (int j = 0; j < s.size(); j++) { //for each ekstra size spot we need to save a tempPosition, for each ekstra size spot, and check if the tempList, contains that spot also.
-                    ourShipPositionList.add(new OurShipPosition(x, y - j));
+                    ourShipPositionList.add(new OurShipPosition(x, y + j));
                 }
                 
                 pos = new Position(x, y);
@@ -112,7 +112,7 @@ public class Player implements BattleshipsPlayer {
                 } while (spotIsNotAvailable);
                 
                 for (int j = 0; j < s.size(); j++) {
-                    ourShipPositionList.add(new OurShipPosition(x - j, y));
+                    ourShipPositionList.add(new OurShipPosition(x + j, y));
                 }
 
                 pos = new Position(x, y);
