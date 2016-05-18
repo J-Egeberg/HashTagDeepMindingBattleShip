@@ -60,7 +60,7 @@ public class Player implements BattleshipsPlayer {
                 
                 do { //We need to get a temp position for each spot the ship is placed, s.size of the ship is more then one, we basicly need to store a tempPostion more of where the ship is being placed.
                     x = rnd.nextInt(sizeX);
-                    y = rnd.nextInt(sizeY - (s.size() - 1));
+                    y = rnd.nextInt(sizeY - (s.size() - 1)); //Making the ship coordinate not place ship outside of board
                     spotIsNotAvailable = false; //It should in general be available now, because it is a new random position.
                 
                     for (int j = 0; j < s.size(); j++) { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
@@ -91,7 +91,7 @@ public class Player implements BattleshipsPlayer {
                 boolean spotIsNotAvailable;
                 
                 do { //We need to get a temp position for each spot the ship is placed, s.size of the ship is more then one, we basicly need to store a tempPostion more of where the ship is being placed.
-                    x = rnd.nextInt(sizeX - (s.size() - 1));
+                    x = rnd.nextInt(sizeX - (s.size() - 1));//Making ship coordinate not place ship outside of board.
                     y = rnd.nextInt(sizeY);
                     spotIsNotAvailable = false; //It should in general be available now, because it is a new random position.
                 

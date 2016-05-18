@@ -34,7 +34,7 @@ public class Y5 implements PlayerFactory<BattleshipsPlayer>
     @Override
     public String getName()
     {
-        return "Y5 #DeepMinding";
+        return "Y5 #DeepMinding Battleship";
     }
     
 }
