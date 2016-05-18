@@ -22,7 +22,7 @@ public class Player implements BattleshipsPlayer {
     private int sizeX;
     private int sizeY;
     private Board myBoard;
-    private ArrayList<ourShipPosition> ourShipPositionList = new ArrayList();
+    private ArrayList<OurShipPosition> ourShipPositionList = new ArrayList();
 
     public Player() {
     }
@@ -56,23 +56,33 @@ public class Player implements BattleshipsPlayer {
                 int x = 0;
                 int y = 0;
 
-                boolean checkAvailableSpot = true;
-                while (checkAvailableSpot) { //We need to get a temp position for each spot the ship is placed, s.size of the ship is more then one, we basicly need to store a tempPostion more of where the ship is being placed.
+                boolean spotIsNotAvailable;
+                
+                do { //We need to get a temp position for each spot the ship is placed, s.size of the ship is more then one, we basicly need to store a tempPostion more of where the ship is being placed.
                     x = rnd.nextInt(sizeX);
                     y = rnd.nextInt(sizeY - (s.size() - 1));
+                    spotIsNotAvailable = false; //It should in general be available now, because it is a new random position.
                 
-//                    for () { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
-//                        
-//                    }
-                    
-                    for (int j = 0; j < s.size(); j++) { //for each ekstra size spot we need to save a tempPosition, for each ekstra size spot, and check if the tempList, contains that spot also.
-                        ourShipPositionList.add(new ourShipPosition(x, y - j));
-
+                    for (int j = 0; j < s.size(); j++) { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
+                        for (OurShipPosition ourShipPosition : ourShipPositionList) { //Cross checking with each saved position.
+                            if (ourShipPosition.getX() == x) {
+                                if (ourShipPosition.getY() == y + s.size()) {
+                                    spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
+                                }
+                            }
+                            else if (ourShipPosition.getY() == y + s.size()) {
+                                if (ourShipPosition.getX() == x) {
+                                    spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
+                                }
+                            }
+                        }
                     }
-                    for (int j = 0; j < s.size(); j++) {
-                        checkAvailableSpot = ourShipPositionList.contains(new ourShipPosition(x, y-j));
-                    }
+                } while (spotIsNotAvailable);
+                
+                for (int j = 0; j < s.size(); j++) { //for each ekstra size spot we need to save a tempPosition, for each ekstra size spot, and check if the tempList, contains that spot also.
+                    ourShipPositionList.add(new OurShipPosition(x, y - j));
                 }
+                
                 pos = new Position(x, y);
 
 
@@ -80,17 +90,33 @@ public class Player implements BattleshipsPlayer {
                 int x = 0;
                 int y = 0;
                 
-                boolean checkAvailableSpot = true;
-                while (checkAvailableSpot) {
+                boolean spotIsNotAvailable;
+                
+                do { //We need to get a temp position for each spot the ship is placed, s.size of the ship is more then one, we basicly need to store a tempPostion more of where the ship is being placed.
                     x = rnd.nextInt(sizeX - (s.size() - 1));
                     y = rnd.nextInt(sizeY);
-                    for (int j = 0; j < s.size(); j++) {
-                        ourShipPositionList.add(new ourShipPosition(x - j, y));
+                    spotIsNotAvailable = false; //It should in general be available now, because it is a new random position.
+                
+                    for (int j = 0; j < s.size(); j++) { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
+                        for (OurShipPosition ourShipPosition : ourShipPositionList) { //Cross checking with each saved position.
+                            if (ourShipPosition.getX() == x + s.size()) {
+                                if (ourShipPosition.getY() == y) {
+                                    spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
+                                }
+                            }
+                            else if (ourShipPosition.getY() == y) {
+                                if (ourShipPosition.getX() == x + s.size()) {
+                                    spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
+                                }
+                            }
+                        }
                     }
-                    for (int j = 0; j < s.size(); j++) {
-                        checkAvailableSpot = ourShipPositionList.contains(new ourShipPosition(x - j, y));
-                    }
+                } while (spotIsNotAvailable);
+                
+                for (int j = 0; j < s.size(); j++) {
+                    ourShipPositionList.add(new OurShipPosition(x - j, y));
                 }
+
                 pos = new Position(x, y);
 
             }

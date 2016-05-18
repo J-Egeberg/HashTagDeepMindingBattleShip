@@ -4,14 +4,14 @@ package y5;
  *
  * @author Tobias Edit Dec 2015 Peter Lorensen: -added JavaDoc comments
  */
-public class ourShipPosition {
+public class OurShipPosition {
 
     private int x;
     private int y;
     
     
 
-    public ourShipPosition(int x, int y) {
+    public OurShipPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
