@@ -66,11 +66,11 @@ public class Player implements BattleshipsPlayer {
                     for (int j = 0; j < s.size(); j++) { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
                         for (OurShipPosition ourShipPosition : ourShipPositionList) { //Cross checking with each saved position.
                             if (ourShipPosition.getX() == x) {
-                                if (ourShipPosition.getY() == y - j) {
+                                if (ourShipPosition.getY() == y + j) {
                                     spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
                                 }
                             }
-                            else if (ourShipPosition.getY() == y - j) {
+                            if (ourShipPosition.getY() == y + j) {
                                 if (ourShipPosition.getX() == x) {
                                     spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
                                 }
@@ -97,13 +97,13 @@ public class Player implements BattleshipsPlayer {
                 
                     for (int j = 0; j < s.size(); j++) { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
                         for (OurShipPosition ourShipPosition : ourShipPositionList) { //Cross checking with each saved position.
-                            if (ourShipPosition.getX() == x - j) {
+                            if (ourShipPosition.getX() == x + j) {
                                 if (ourShipPosition.getY() == y) {
                                     spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
                                 }
                             }
-                            else if (ourShipPosition.getY() == y) {
-                                if (ourShipPosition.getX() == x - j) {
+                            if (ourShipPosition.getY() == y) {
+                                if (ourShipPosition.getX() == x + j) {
                                     spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
                                 }
                             }
