@@ -22,7 +22,7 @@ public class Player implements BattleshipsPlayer {
     private int sizeX;
     private int sizeY;
     private Board myBoard;
-    private ArrayList<TempPosition> list = new ArrayList();
+    private ArrayList<ourShipPosition> ourShipPositionList = new ArrayList();
 
     public Player() {
     }
@@ -57,17 +57,20 @@ public class Player implements BattleshipsPlayer {
                 int y = 0;
 
                 boolean checkAvailableSpot = true;
-                while (checkAvailableSpot) {
+                while (checkAvailableSpot) { //We need to get a temp position for each spot the ship is placed, s.size of the ship is more then one, we basicly need to store a tempPostion more of where the ship is being placed.
                     x = rnd.nextInt(sizeX);
                     y = rnd.nextInt(sizeY - (s.size() - 1));
-                    //We need to get a temp position for each spot the ship is placed, s.size of the ship is more then one, we basicly need to store a tempPostion more of where the ship is being placed.
-                    //for each ekstra size spot we need to save a tempPosition, for each ekstra size spot, and check if the tempList, contains that spot also.
-                    for (int j = 0; j < s.size(); j++) {
-                        list.add(new TempPosition(x, y - j));
+                
+//                    for () { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
+//                        
+//                    }
+                    
+                    for (int j = 0; j < s.size(); j++) { //for each ekstra size spot we need to save a tempPosition, for each ekstra size spot, and check if the tempList, contains that spot also.
+                        ourShipPositionList.add(new ourShipPosition(x, y - j));
 
                     }
                     for (int j = 0; j < s.size(); j++) {
-                        checkAvailableSpot = list.contains(new TempPosition(x, y-j));
+                        checkAvailableSpot = ourShipPositionList.contains(new ourShipPosition(x, y-j));
                     }
                 }
                 pos = new Position(x, y);
@@ -82,10 +85,10 @@ public class Player implements BattleshipsPlayer {
                     x = rnd.nextInt(sizeX - (s.size() - 1));
                     y = rnd.nextInt(sizeY);
                     for (int j = 0; j < s.size(); j++) {
-                        list.add(new TempPosition(x - j, y));
+                        ourShipPositionList.add(new ourShipPosition(x - j, y));
                     }
                     for (int j = 0; j < s.size(); j++) {
-                        checkAvailableSpot = list.contains(new TempPosition(x - j, y));
+                        checkAvailableSpot = ourShipPositionList.contains(new ourShipPosition(x - j, y));
                     }
                 }
                 pos = new Position(x, y);
