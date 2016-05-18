@@ -48,7 +48,6 @@ public class Player implements BattleshipsPlayer {
         myBoard = board;
         sizeX = board.sizeX();
         sizeY = board.sizeY();
-        
         for (int i = 0; i < fleet.getNumberOfShips(); ++i) {
             Ship s = fleet.getShip(i);
             boolean vertical = rnd.nextBoolean();
@@ -67,15 +66,17 @@ public class Player implements BattleshipsPlayer {
                         list.add(new TempPosition(x, y - j));
 
                     }
-
-                    checkAvailableSpot = list.contains(new TempPosition(x, y));
+                    for (int j = 0; j < s.size(); j++) {
+                        checkAvailableSpot = list.contains(new TempPosition(x, y-j));
+                    }
                 }
                 pos = new Position(x, y);
+
 
             } else {
                 int x = 0;
                 int y = 0;
-
+                
                 boolean checkAvailableSpot = true;
                 while (checkAvailableSpot) {
                     x = rnd.nextInt(sizeX - (s.size() - 1));
@@ -83,8 +84,9 @@ public class Player implements BattleshipsPlayer {
                     for (int j = 0; j < s.size(); j++) {
                         list.add(new TempPosition(x - j, y));
                     }
-
-                    checkAvailableSpot = list.contains(new TempPosition(x, y));
+                    for (int j = 0; j < s.size(); j++) {
+                        checkAvailableSpot = list.contains(new TempPosition(x - j, y));
+                    }
                 }
                 pos = new Position(x, y);
 
