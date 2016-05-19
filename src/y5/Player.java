@@ -23,8 +23,13 @@ public class Player implements BattleshipsPlayer {
     private int sizeY;
     private Board myBoard;
     private ArrayList<OurShipPosition> ourShipPositionList = new ArrayList();
+    private boolean huntHit; 
+    private ShotPosition shotPosition;
+    private ArrayList<ShotPosition> ourShotPositionList;
+    
 
     public Player() {
+        ourShotPositionList = new ArrayList();
     }
 
     /**
@@ -147,15 +152,29 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
-        for (int i = 0; i < 99; i++) {
-            
-        }
+         
         int x = rnd.nextInt(sizeX);
         int y = rnd.nextInt(sizeY);
+        Position position = new Position (x,y);
         
-        return new Position(x, y);
+        
+        // Hvis man rammer et skib, hitFeedBack
+        
+        if (huntHit){
+            ShotPosition sp = ourShotPositionList.get(ourShotPositionList.size()-2); //jeg modtager mit forrige skud
+            
+            
+            position = sp.getNorthTarget(); //henter potitionen en y plads større end den gamle position og gemmer den i position.
+            if (position==null){
+                position = sp.getSouthTarget();
+            }
+        }
+            
+        shotPosition = new ShotPosition(position.x , position.y);
+        ourShotPositionList.add(shotPosition); // tilføjer og gemmer alle skud
+        return position;
     }
-
+            
     /**
      * Called right after getFireCoordinates(...) to let your AI know if you hit
      * something or not.
@@ -168,13 +187,9 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
-        //hvis hit=true skal der skydes rundtom for at finde resten af skibet 
-        if (hit){
-            huntNorth (x, y , hit)
-            huntSouth (x, y , hit)
-            huntWest (x, y , hit)
-            huntEast (x, y , hit)
-        }
+        huntHit=hit;    
+        
+
         
     }
     
