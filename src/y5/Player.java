@@ -147,8 +147,12 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
+        for (int i = 0; i < 99; i++) {
+            
+        }
         int x = rnd.nextInt(sizeX);
         int y = rnd.nextInt(sizeY);
+        
         return new Position(x, y);
     }
 
@@ -164,7 +168,23 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
-        //Do nothing
+        //hvis hit=true skal der skydes rundtom for at finde resten af skibet 
+        if (hit){
+            huntNorth (x, y , hit)
+            huntSouth (x, y , hit)
+            huntWest (x, y , hit)
+            huntEast (x, y , hit)
+        }
+        
+    }
+    
+    public boolean huntNorth (int x , int y , boolean hit){
+
+        //hvis den rammer skal hit returne true
+        //der skal skydes igen hvis hit er true
+        
+    //hvis den ikke rammer returner hit false og der skydes syd for istedet
+       return hit = false;
     }
 
     /**
