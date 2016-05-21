@@ -23,10 +23,9 @@ public class Player implements BattleshipsPlayer {
     private int sizeY;
     private Board myBoard;
     private ArrayList<OurShipPosition> ourShipPositionList = new ArrayList();
-    private boolean huntHit; 
+    private boolean huntHit;
     private ShotPosition shotPosition;
     private ArrayList<ShotPosition> ourShotPositionList;
-    
 
     public Player() {
         ourShotPositionList = new ArrayList();
@@ -62,12 +61,12 @@ public class Player implements BattleshipsPlayer {
                 int y = 0;
 
                 boolean spotIsNotAvailable;
-                
+
                 do { //We need to get a temp position for each spot the ship is placed, s.size of the ship is more then one, we basicly need to store a tempPostion more of where the ship is being placed.
                     x = rnd.nextInt(sizeX);
                     y = rnd.nextInt(sizeY - (s.size() - 1)); //Making the ship coordinate not place ship outside of board
                     spotIsNotAvailable = false; //It should in general be available now, because it is a new random position.
-                
+
                     for (int j = 0; j < s.size(); j++) { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
                         for (OurShipPosition ourShipPosition : ourShipPositionList) { //Cross checking with each saved position.
                             if (ourShipPosition.getX() == x) {
@@ -83,23 +82,23 @@ public class Player implements BattleshipsPlayer {
                         }
                     }
                 } while (spotIsNotAvailable);
-                
+
                 for (int j = 0; j < s.size(); j++) { //for each ekstra size spot we need to save a tempPosition, for each ekstra size spot, and check if the tempList, contains that spot also.
                     ourShipPositionList.add(new OurShipPosition(x, y + j));
                 }
-                
+
                 pos = new Position(x, y);
             } else {
                 int x = 0;
                 int y = 0;
-                
+
                 boolean spotIsNotAvailable;
-                
+
                 do { //We need to get a temp position for each spot the ship is placed, s.size of the ship is more then one, we basicly need to store a tempPostion more of where the ship is being placed.
                     x = rnd.nextInt(sizeX - (s.size() - 1));//Making ship coordinate not place ship outside of board.
                     y = rnd.nextInt(sizeY);
                     spotIsNotAvailable = false; //It should in general be available now, because it is a new random position.
-                
+
                     for (int j = 0; j < s.size(); j++) { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
                         for (OurShipPosition ourShipPosition : ourShipPositionList) { //Cross checking with each saved position.
                             if (ourShipPosition.getX() == x + j) {
@@ -115,7 +114,7 @@ public class Player implements BattleshipsPlayer {
                         }
                     }
                 } while (spotIsNotAvailable);
-                
+
                 for (int j = 0; j < s.size(); j++) {
                     ourShipPositionList.add(new OurShipPosition(x + j, y));
                 }
@@ -152,29 +151,36 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
-         
+
         int x = rnd.nextInt(sizeX);
         int y = rnd.nextInt(sizeY);
-        Position position = new Position (x,y);
+        Position position = new Position(x, y);
+
         
-        
-        // Hvis man rammer et skib, hitFeedBack
-        
-        if (huntHit){
-            ShotPosition sp = ourShotPositionList.get(ourShotPositionList.size()-2); //jeg modtager mit forrige skud
-            
-            
-            position = sp.getNorthTarget(); //henter potitionen en y plads større end den gamle position og gemmer den i position.
-            if (position==null){
-                position = sp.getSouthTarget();
+        if (huntHit) {
+            //burde der ikke være et loop her der sørgede for at man hele tiden tog udgangspunkt i det første hit? så man finder den rigtige retning?
+            ShotPosition previousShot = ourShotPositionList.get(ourShotPositionList.size() - 2); //jeg modtager mit forrige skud
+
+            //hvis man rammer skal den gå ind i søge mode.. søge mode indikerer at der skydes i en bestemt retning indtil der misses eller indtil kanten af brættet rammes 
+            // hvis man allerede har skudt der skyder programmet et andet sted
+            if (ourShotPositionList.contains(previousShot.getNorthTarget()) || previousShot.getNorthTarget().equals(null)) {
+                position = previousShot.getSouthTarget();
+            } else if (ourShotPositionList.contains(previousShot.getSouthTarget()) || previousShot.getSouthTarget().equals(null)) {
+                position = previousShot.getNorthTarget();
+            } else if (ourShotPositionList.contains(previousShot.getEastTarget()) || previousShot.getEastTarget().equals(null)) {
+                position = previousShot.getWestTarget();
+            } else if (ourShotPositionList.contains(previousShot.getWestTarget()) || previousShot.getWestTarget().equals(null)) {
+                position = previousShot.getEastTarget();
             }
+            
+
         }
-            
-        shotPosition = new ShotPosition(position.x , position.y);
-        ourShotPositionList.add(shotPosition); // tilføjer og gemmer alle skud
-        return position;
+
+        shotPosition = new ShotPosition(position.x, position.y, huntHit); //sætter skudet i vores ShotPosition klasse
+        ourShotPositionList.add(shotPosition); // tilføjer og gemmer alle skud via ShotPosition klassen
+        return position; // giver koordinaterne tilbage til Battleship om hvor der skal skydes
     }
-            
+
     /**
      * Called right after getFireCoordinates(...) to let your AI know if you hit
      * something or not.
@@ -187,19 +193,14 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
-        huntHit=hit;    
-        
+        huntHit = hit;
+        int x = shotPosition.getX();
+        int y = shotPosition.getY();
+        ShotPosition sp = new ShotPosition(x, y, hit);
+        if (hit) {
 
-        
-    }
-    
-    public boolean huntNorth (int x , int y , boolean hit){
+        }
 
-        //hvis den rammer skal hit returne true
-        //der skal skydes igen hvis hit er true
-        
-    //hvis den ikke rammer returner hit false og der skydes syd for istedet
-       return hit = false;
     }
 
     /**

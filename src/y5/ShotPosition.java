@@ -15,11 +15,15 @@ class ShotPosition {
 
     private int x;
     private int y;
+    private boolean hit;
 
-    public ShotPosition(int x, int y) {
+    public ShotPosition(int x, int y, boolean hit) {
         this.x = x;
         this.y = y;
+        this.hit=hit;
     }
+
+
 
     public Position getNorthTarget() {
         Position position = new Position(this.x, this.y + 1);
@@ -82,5 +86,15 @@ class ShotPosition {
     public void setY(int y) {
         this.y = y;
     }
+
+    public boolean isHit() {
+        return hit;
+    }
+
+    public void setHit(boolean hit) {
+        this.hit = hit;
+    }
+    
+    
 
 }
