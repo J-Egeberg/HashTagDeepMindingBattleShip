@@ -36,26 +36,29 @@ public class HuntingModeOne implements AbstractHunting {
     public OurShot getNextTarget(OurShots ourShots, OurShot ourShotCurrent, EnemyShips enemyShips) {
         int x = 0;
         int y = 0;
-        boolean isNotNewRandomPosition = true;
+        boolean isNotNewRandomPosition;
         do {
+            isNotNewRandomPosition = false;
             x = rnd.nextInt(boardSizeX); //HuntingMode 1 - Random, except previous shots
             y = rnd.nextInt(boardSizeY); //HuntingMode 1 - Tandom, except previous shots
-            for (OurShot ourShot : ourShots) {
-                if (ourShot.getPosition().x != x) {
-                    if (ourShot.getPosition().y != y) {
-                        isNotNewRandomPosition = false;
+            if (ourShots.size() != 0) {
+                for (OurShot ourShot : ourShots.getOurShots()) {
+                    if (ourShot.getPosition().x == x) {
+                        if (ourShot.getPosition().y == y) {
+                            isNotNewRandomPosition = true;
+                        }
                     }
-                }
-                if (ourShot.getPosition().y != y) {
-                    if (ourShot.getPosition().x != x) {
-                        isNotNewRandomPosition = false;
+                    if (ourShot.getPosition().y == y) {
+                        if (ourShot.getPosition().x == x) {
+                            isNotNewRandomPosition = true;
+                        }
                     }
                 }
             }
 // Loops old shots, and finds shot if previous
         } while (isNotNewRandomPosition); //Checks it is a new position
 
-        return new OurShot(x, y, ourShots.getOurShots().size()); //HuntingMode 1
+        return new OurShot(x, y, ourShots.size()); //HuntingMode 1
     }
 
     @Override

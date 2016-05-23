@@ -24,8 +24,8 @@ public class EnemyShips {
         this.enemyShips = enemyShips;
     }
 
-    EnemyShips() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public EnemyShips() {
+        this.enemyShips = new ArrayList();
     }
 
     public ArrayList<EnemyShip> getEnemyShips() {

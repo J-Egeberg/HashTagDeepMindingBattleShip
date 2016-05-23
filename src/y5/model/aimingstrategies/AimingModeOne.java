@@ -33,6 +33,13 @@ public class AimingModeOne implements AbstractAiming {
         return 1;
     }
 
+    /**
+     * This returns the next target by the systematic aiming, with enemyShip in knowledge
+     * @param ourShots
+     * @param ourShotCurrent
+     * @param enemyShips
+     * @return OurShot
+     */
     @Override
     public OurShot getNextTarget(OurShots ourShots, OurShot ourShotCurrent, EnemyShips enemyShips) {
         //Newer version of Aiming Mode One

@@ -47,7 +47,7 @@ public class Player implements BattleshipsPlayer {
         ourShipPositionList = new ArrayList();
         currentShotNumber = 0;
         isHuntingMode = true;
-        isAimingMode = true;
+        isAimingMode = false;
     }
 
     /**
@@ -71,6 +71,10 @@ public class Player implements BattleshipsPlayer {
         myBoard = board;
         sizeX = board.sizeX();
         sizeY = board.sizeY();
+        enemyShips = new EnemyShips();
+        ourShots = new OurShots();
+        AimingStrategy = new AimingModeOne(sizeX,sizeY);
+        huntingStrategy = new HuntingModeOne(sizeX,sizeY);
         for (int i = 0; i < fleet.getNumberOfShips(); ++i) {
             Ship s = fleet.getShip(i);
             boolean vertical = rnd.nextBoolean();
@@ -172,9 +176,7 @@ public class Player implements BattleshipsPlayer {
     public Position getFireCoordinates(Fleet enemyShips) {
         this.enemyShips.setEnemyShipCountStatus( enemyShips.getNumberOfShips()); //Gets the enemy ship count to compare after shot.
         for (int i = 0; i < enemyShips.getNumberOfShips(); i++) {
-            if (this.enemyShips.getEnemyShip(i).getTournamentHashCodeShip() != enemyShips.getShip(i).hashCode()) {
-                this.enemyShips.addEnemyShip(enemyShips.getShip(i)); //Add's all the ships
-            }
+            this.enemyShips.addEnemyShip(enemyShips.getShip(i)); //Add's all the ships
         }
 
         if (isHuntingMode) { // Hunting mode
@@ -210,18 +212,16 @@ public class Player implements BattleshipsPlayer {
             currentOurShot.setEnemyShipKillShot(hit);
         }
         
-        if (isHuntHit && isHuntingMode) { // Checks if there is hit and goes into aiming the ship
-            isAimingMode = true;
-            isHuntingMode = false;
-        }
+//        if (isHuntHit && isHuntingMode) { // Checks if there is hit and goes into aiming the ship
+//            isAimingMode = true;
+//            isHuntingMode = false;
+//        }
         
-        if (!isHuntHit && isAimingMode && ?) { //Checks if ship is wrecked to change from aiming to hunting
+        if (!isHuntHit && isAimingMode) { //Checks if ship is wrecked to change from aiming to hunting
             isAimingMode = false;
             isHuntingMode = true;
         }
-        currentOurShot.setHit(hit); //Sets the previous fired shot, with the hit feedback
-        ourShotPositionList.add(currentOurShot); //Add's the shot fired to ourShotPositionList
-
+        ourShots.addOurShot(currentOurShot);
     }
 
     /**
@@ -243,10 +243,7 @@ public class Player implements BattleshipsPlayer {
     @Override
     public void startRound(int round) {
         currentShotNumber = 0;
-        enemyShips = new EnemyShips();
-        ourShots = new OurShots();
-        AimingStrategy = new AimingModeOne(sizeX,sizeY);
-        huntingStrategy = new HuntingModeOne(sizeX,sizeY);
+
     }
 
     /**

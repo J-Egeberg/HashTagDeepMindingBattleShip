@@ -7,6 +7,7 @@ package y5.model.attacking;
 
 import y5.model.attacking.OurShot;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -15,23 +16,23 @@ import java.util.ArrayList;
 public class OurShots {
     
     private ArrayList<OurShot> ourShots;
-
+    
     public OurShots(ArrayList<OurShot> ourShots) {
         this.ourShots = ourShots;
     }
 
-    OurShots() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public OurShots() {
+        this.ourShots = new ArrayList();
     }
-
+    
     public ArrayList<OurShot> getOurShots() {
         return ourShots;
     }
-
+    
     public void setOurShots(ArrayList<OurShot> ourShots) {
         this.ourShots = ourShots;
     }
-
+    
     @Override
     public String toString() {
         return "OurShots{" + "ourShots=" + ourShots.toString() + '}';
@@ -56,9 +57,13 @@ public class OurShots {
         }
         return hitsCount;
     }
-
+    
     public int size() {
-        return this.size();
+        return ourShots.size();
+    }
+
+    public void addOurShot(OurShot newOurShot) {
+        this.ourShots.add(newOurShot);
     }
     
 }
