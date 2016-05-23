@@ -4,6 +4,11 @@
  */
 package y5;
 
+import y5.model.attacking.OurShots;
+import y5.model.attacking.OurShot;
+import y5.model.defending.OurShip;
+import y5.model.attacking.EnemyShip;
+import y5.model.attacking.EnemyShips;
 import battleship.interfaces.BattleshipsPlayer;
 import battleship.interfaces.Fleet;
 import battleship.interfaces.Position;
@@ -11,6 +16,8 @@ import battleship.interfaces.Board;
 import battleship.interfaces.Ship;
 import java.util.ArrayList;
 import java.util.Random;
+import y5.model.aimingstrategies.*;
+import y5.model.huntingstrategies.*;
 
 /**
  *
@@ -22,13 +29,25 @@ public class Player implements BattleshipsPlayer {
     private int sizeX;
     private int sizeY;
     private Board myBoard;
-    private ArrayList<OurShipPosition> ourShipPositionList = new ArrayList();
-    private boolean huntHit;
-    private ShotPosition shotPosition;
-    private ArrayList<ShotPosition> ourShotPositionList;
+    private ArrayList<OurShip> ourShipPositionList;
+    private ArrayList<OurShot> ourShotPositionList;
+    private int currentShotNumber; //Zero based number
+    private boolean isHuntingMode;
+    private boolean isAimingMode;
+    private EnemyShips enemyShips;
+    private EnemyShip currentEnemyShip;
+    private OurShot currentOurShot;
+    private OurShots ourShots;
+    private AbstractHunting huntingStrategy;
+    private AbstractAiming AimingStrategy;
+    private boolean isHuntHit;
 
     public Player() {
         ourShotPositionList = new ArrayList();
+        ourShipPositionList = new ArrayList();
+        currentShotNumber = 0;
+        isHuntingMode = true;
+        isAimingMode = true;
     }
 
     /**
@@ -68,14 +87,14 @@ public class Player implements BattleshipsPlayer {
                     spotIsNotAvailable = false; //It should in general be available now, because it is a new random position.
 
                     for (int j = 0; j < s.size(); j++) { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
-                        for (OurShipPosition ourShipPosition : ourShipPositionList) { //Cross checking with each saved position.
-                            if (ourShipPosition.getX() == x) {
-                                if (ourShipPosition.getY() == y + j) {
+                        for (OurShip ourShip : ourShipPositionList) { //Cross checking with each saved position.
+                            if (ourShip.getX() == x) {
+                                if (ourShip.getY() == y + j) {
                                     spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
                                 }
                             }
-                            if (ourShipPosition.getY() == y + j) {
-                                if (ourShipPosition.getX() == x) {
+                            if (ourShip.getY() == y + j) {
+                                if (ourShip.getX() == x) {
                                     spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
                                 }
                             }
@@ -84,7 +103,7 @@ public class Player implements BattleshipsPlayer {
                 } while (spotIsNotAvailable);
 
                 for (int j = 0; j < s.size(); j++) { //for each ekstra size spot we need to save a tempPosition, for each ekstra size spot, and check if the tempList, contains that spot also.
-                    ourShipPositionList.add(new OurShipPosition(x, y + j));
+                    ourShipPositionList.add(new OurShip(x, y + j));
                 }
 
                 pos = new Position(x, y);
@@ -100,7 +119,7 @@ public class Player implements BattleshipsPlayer {
                     spotIsNotAvailable = false; //It should in general be available now, because it is a new random position.
 
                     for (int j = 0; j < s.size(); j++) { //For the new position created right here above, we need to check if the position is able to add, by checking ourShipPositions
-                        for (OurShipPosition ourShipPosition : ourShipPositionList) { //Cross checking with each saved position.
+                        for (OurShip ourShipPosition : ourShipPositionList) { //Cross checking with each saved position.
                             if (ourShipPosition.getX() == x + j) {
                                 if (ourShipPosition.getY() == y) {
                                     spotIsNotAvailable = true; //Starting the getting of a new position for this ship again, because it can't be placed on this random spot.
@@ -116,7 +135,7 @@ public class Player implements BattleshipsPlayer {
                 } while (spotIsNotAvailable);
 
                 for (int j = 0; j < s.size(); j++) {
-                    ourShipPositionList.add(new OurShipPosition(x + j, y));
+                    ourShipPositionList.add(new OurShip(x + j, y));
                 }
 
                 pos = new Position(x, y);
@@ -151,34 +170,22 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
-
-        int x = rnd.nextInt(sizeX);
-        int y = rnd.nextInt(sizeY);
-        Position position = new Position(x, y);
-
-        
-        if (huntHit) {
-            //burde der ikke være et loop her der sørgede for at man hele tiden tog udgangspunkt i det første hit? så man finder den rigtige retning?
-            ShotPosition previousShot = ourShotPositionList.get(ourShotPositionList.size() - 2); //jeg modtager mit forrige skud
-
-            //hvis man rammer skal den gå ind i søge mode.. søge mode indikerer at der skydes i en bestemt retning indtil der misses eller indtil kanten af brættet rammes 
-            // hvis man allerede har skudt der skyder programmet et andet sted
-            if (ourShotPositionList.contains(previousShot.getNorthTarget()) || previousShot.getNorthTarget().equals(null)) {
-                position = previousShot.getSouthTarget();
-            } else if (ourShotPositionList.contains(previousShot.getSouthTarget()) || previousShot.getSouthTarget().equals(null)) {
-                position = previousShot.getNorthTarget();
-            } else if (ourShotPositionList.contains(previousShot.getEastTarget()) || previousShot.getEastTarget().equals(null)) {
-                position = previousShot.getWestTarget();
-            } else if (ourShotPositionList.contains(previousShot.getWestTarget()) || previousShot.getWestTarget().equals(null)) {
-                position = previousShot.getEastTarget();
+        this.enemyShips.setEnemyShipCountStatus( enemyShips.getNumberOfShips()); //Gets the enemy ship count to compare after shot.
+        for (int i = 0; i < enemyShips.getNumberOfShips(); i++) {
+            if (this.enemyShips.getEnemyShip(i).getTournamentHashCodeShip() != enemyShips.getShip(i).hashCode()) {
+                this.enemyShips.addEnemyShip(enemyShips.getShip(i)); //Add's all the ships
             }
-            
-
         }
 
-        shotPosition = new ShotPosition(position.x, position.y, huntHit); //sætter skudet i vores ShotPosition klasse
-        ourShotPositionList.add(shotPosition); // tilføjer og gemmer alle skud via ShotPosition klassen
-        return position; // giver koordinaterne tilbage til Battleship om hvor der skal skydes
+        if (isHuntingMode) { // Hunting mode
+            currentOurShot = huntingStrategy.getNextTarget(ourShots, currentOurShot, this.enemyShips);
+        }
+
+        if (isAimingMode) { // AimingMode
+            currentOurShot = AimingStrategy.getNextTarget(ourShots, currentOurShot, this.enemyShips);
+        }
+
+        return currentOurShot.getPosition(); // giver koordinaterne tilbage til Battleship om hvor der skal skydes
     }
 
     /**
@@ -193,13 +200,27 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
-        huntHit = hit;
-        int x = shotPosition.getX();
-        int y = shotPosition.getY();
-        ShotPosition sp = new ShotPosition(x, y, hit);
-        if (hit) {
+        enemyShips.getNumberOfShips(); //Gets the enemy ships count to found out of wrecked amount
 
+        currentShotNumber++; //Increments the currentShotCount, Because being here is proff of shot is fired.
+        isHuntHit = hit;
+        currentOurShot.setHit(hit);
+        
+        if (this.enemyShips.getEnemyShips().size() < enemyShips.getNumberOfShips()) {
+            currentOurShot.setEnemyShipKillShot(hit);
         }
+        
+        if (isHuntHit && isHuntingMode) { // Checks if there is hit and goes into aiming the ship
+            isAimingMode = true;
+            isHuntingMode = false;
+        }
+        
+        if (!isHuntHit && isAimingMode && ?) { //Checks if ship is wrecked to change from aiming to hunting
+            isAimingMode = false;
+            isHuntingMode = true;
+        }
+        currentOurShot.setHit(hit); //Sets the previous fired shot, with the hit feedback
+        ourShotPositionList.add(currentOurShot); //Add's the shot fired to ourShotPositionList
 
     }
 
@@ -221,7 +242,11 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void startRound(int round) {
-        //Do nothing
+        currentShotNumber = 0;
+        enemyShips = new EnemyShips();
+        ourShots = new OurShots();
+        AimingStrategy = new AimingModeOne(sizeX,sizeY);
+        huntingStrategy = new HuntingModeOne(sizeX,sizeY);
     }
 
     /**
