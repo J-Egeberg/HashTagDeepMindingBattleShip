@@ -14,18 +14,25 @@ import battleship.interfaces.Position;
 public class OurShot {
 
     private Position position;
-    private boolean hit;
     private int shotNumber;
-    private boolean enemyShipKillShot;
+    private boolean isHit;
+    private boolean isEnemyShipKillShot;
+    private boolean isModeChange;
 
     public OurShot(int x, int y, int shotNumber) {
         this.position = new Position(x,y);
         this.shotNumber = shotNumber;
+        isHit = false;
+        isModeChange = false;
+        isEnemyShipKillShot = false;
     }
 
-    public OurShot(Position northPosition, int shotNumber) {
-        this.position = northPosition;
+    public OurShot(Position position, int shotNumber) {
+        this.position = position;
         this.shotNumber = shotNumber;
+        isHit = false;
+        isModeChange = false;
+        isEnemyShipKillShot = false;
     }
 
     public Position getNorthPosition() {
@@ -70,7 +77,7 @@ public class OurShot {
 
     @Override
     public String toString() {
-        return "OurShot{" + "position=" + position.toString() + ", hit=" + hit + ", shotNumber=" + shotNumber + ", enemyShipKillShot=" + enemyShipKillShot + '}';
+        return "OurShot{" + "position=" + position.toString() + ", hit=" + isHit + ", shotNumber=" + shotNumber + ", enemyShipKillShot=" + isEnemyShipKillShot + '}';
     }
 
     public Position getPosition() {
@@ -82,11 +89,11 @@ public class OurShot {
     }
 
     public boolean isHit() {
-        return hit;
+        return isHit;
     }
 
     public void setHit(boolean hit) {
-        this.hit = hit;
+        this.isHit = hit;
     }
 
     public int getShotNumber() {
@@ -98,11 +105,11 @@ public class OurShot {
     }
 
     public boolean isEnemyShipKillShot() {
-        return enemyShipKillShot;
+        return isEnemyShipKillShot;
     }
 
     public void setEnemyShipKillShot(boolean enemyShipKillShot) {
-        this.enemyShipKillShot = enemyShipKillShot;
+        this.isEnemyShipKillShot = enemyShipKillShot;
     }
 
     public boolean isNotPositioned() {
@@ -110,6 +117,14 @@ public class OurShot {
             return true;
         }
         return false;
+    }
+
+    public boolean isModeChange() {
+        return isModeChange;
+    }
+    
+    public void setIsModeChange(boolean isModeChange) {
+        this.isModeChange = isModeChange;
     }
 
 }

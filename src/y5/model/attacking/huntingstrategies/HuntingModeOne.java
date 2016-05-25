@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package y5.model.huntingstrategies;
+package y5.model.attacking.huntingstrategies;
 
+import y5.model.attacking.huntingstrategies.AbstractHunting;
 import battleship.interfaces.Position;
 import java.util.Random;
 import y5.model.attacking.EnemyShips;
@@ -37,7 +38,7 @@ public class HuntingModeOne implements AbstractHunting {
         int x = 0;
         int y = 0;
         boolean isNotNewRandomPosition;
-        do {
+        do { // Loops old shots, and finds new shot if previous
             isNotNewRandomPosition = false;
             x = rnd.nextInt(boardSizeX); //HuntingMode 1 - Random, except previous shots
             y = rnd.nextInt(boardSizeY); //HuntingMode 1 - Tandom, except previous shots
@@ -55,7 +56,6 @@ public class HuntingModeOne implements AbstractHunting {
                     }
                 }
             }
-// Loops old shots, and finds shot if previous
         } while (isNotNewRandomPosition); //Checks it is a new position
 
         return new OurShot(x, y, ourShots.size()); //HuntingMode 1

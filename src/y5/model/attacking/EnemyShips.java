@@ -72,5 +72,9 @@ public class EnemyShips {
     public EnemyShip getEnemyShip(int i) {
         return this.enemyShips.get(i);
     }
+
+    public int size() {
+        return enemyShips.size();
+    }
     
 }

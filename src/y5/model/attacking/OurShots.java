@@ -5,6 +5,7 @@
  */
 package y5.model.attacking;
 
+import battleship.interfaces.Position;
 import y5.model.attacking.OurShot;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -72,6 +73,56 @@ public class OurShots {
 
     public boolean isLastShotHorizontal() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getCurrentVerticalHitShots(int currentRoundAimingShotsCount) {
+        int verticalHitShotsCount = 0;
+
+        for (int i = ourShots.size()-1; i >= ourShots.size()-currentRoundAimingShotsCount; i--) { //Rolls through our shots backwards, and finds the rows, where the last aiming shots were fired
+            if (ourShots.get(i).isHit() && ourShots.get(ourShots.size()-1).getPosition().x == ourShots.get(i).getPosition().x) { //Check's if our shot was a fired hit, and is same row as last fired shot
+                verticalHitShotsCount++; //increment a shot fired vertical for the last shots
+            }
+        }
+        
+        return verticalHitShotsCount;
+    }
+
+    public int getCurrentHorizontalHitShots(int currentRoundAimingShotsCount) {
+        int horizontalHitShotsCount = 0;
+
+        for (int i = ourShots.size()-1; i >= ourShots.size()-currentRoundAimingShotsCount; i--) { //Rolls through our shots backwards, and finds the rows, where the last aiming shots were fired
+            if (ourShots.get(i).isHit() && ourShots.get(ourShots.size()-1).getPosition().x == ourShots.get(i).getPosition().x) { //Check's if our shot was a fired hit, and is same row as last fired shot
+                horizontalHitShotsCount++;
+            }
+        }
+        
+        return horizontalHitShotsCount;
+    }
+
+    public boolean containsPosition(Position position) {
+        boolean isContaingPosition = false;
+        for (OurShot ourShot : ourShots) {
+            if (ourShot.getPosition().x == position.x) {
+                if (ourShot.getPosition().y == position.y) {
+                    return true;
+                }
+            }
+            if (ourShot.getPosition().y == position.y) {
+                if (ourShot.getPosition().x == position.x) {
+                    return true;
+                }
+            }
+        }
+        return isContaingPosition;
+    }
+
+    public OurShot getCurrentModeFirstShot() {
+        for (int i = ourShots.size()-1; i > 0; i--) {
+            if (ourShots.get(i).isModeChange()) {
+                return ourShots.get(i);
+            }
+        }
+        return ourShots.get(0);
     }
     
 }
