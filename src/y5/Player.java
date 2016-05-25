@@ -39,7 +39,7 @@ public class Player implements BattleshipsPlayer {
     private OurShot currentOurShot;
     private OurShots ourShots;
     private AbstractHunting huntingStrategy;
-    private AbstractAiming AimingStrategy;
+    private AbstractAiming aimingStrategy;
     private boolean isFirstShot;
 
     public Player() {
@@ -73,7 +73,7 @@ public class Player implements BattleshipsPlayer {
         sizeY = board.sizeY();
         enemyShips = new EnemyShips();
         ourShots = new OurShots();
-        AimingStrategy = new AimingModeOne(sizeX, sizeY);
+        aimingStrategy = new AimingModeOne(sizeX, sizeY);
         huntingStrategy = new HuntingModeOne(sizeX, sizeY);
         isFirstShot = true;
 
@@ -188,7 +188,7 @@ public class Player implements BattleshipsPlayer {
         }
 
         if (isAimingMode) { // AimingMode
-            currentOurShot = AimingStrategy.getNextTarget(ourShots, currentOurShot, this.enemyShips);  //Get's the next target accourding to the set aimingstrategy
+            currentOurShot = aimingStrategy.getNextTarget(ourShots, currentOurShot, this.enemyShips);  //Get's the next target accourding to the set aimingstrategy
         }
 
         return currentOurShot.getPosition(); // giver koordinaterne tilbage til Battleship om hvor der skal skydes
@@ -219,17 +219,34 @@ public class Player implements BattleshipsPlayer {
             isCurrentlyWrecked = true;
             boolean isVerticalWrecked = false;
             for (OurShot ourShot : ourShots.getOurShots()) { //Search's for vertical or horizontal shooting
-                
+                if (ourShots.isLastShotVertical()) { //Checks if last shot is vertical
+                    isVerticalWrecked = true;
+                }
+                if (ourShots.isLastShotHorizontal()) { //Checks if last shot is horizontal
+                    isVerticalWrecked = false;
+                }
             }            
             if (isVerticalWrecked) { //Checks if ship was vertical or horizontal wrecked
-                
+                for (EnemyShip enemyShip : this.enemyShips.getEnemyShips()) { //Finds the correct size of the wrecked enemyShip in this's enemyShips
+                    if (enemyShip.getSize() == aimingStrategy.getCurrentVerticalHitAimingShots()) { //Checks if the current hit Aiming shots is 2, 3, 4 or 5 size
+                        //To do
+                    }
+                }
             }
+            else {
+                for (EnemyShip enemyShip : this.enemyShips.getEnemyShips()) { //Finds the correct size of the wrecked enemyShip in this's enemyShips
+                    if (enemyShip.getSize() == aimingStrategy.getCurrentHorizontalHitAimingShots()) { //Checks if the current hit aiming shots is 2, 3, 4 or 5 size
+                        //To do
+                    }
+                }
+            }
+            
             
         }
 
         if (isHit && isHuntingMode) { // Checks if there is hit and if we were hunting
-            isAimingMode = true; //Goes into aiming mode
-            isHuntingMode = false; //Turns off hunting mode
+//            isAimingMode = true; //Goes into aiming mode
+//            isHuntingMode = false; //Turns off hunting mode
         }
 
         if (!isHit && isAimingMode && isCurrentlyWrecked) { //Checks if ship is wrecked to go back into hunting

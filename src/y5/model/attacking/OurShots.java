@@ -65,5 +65,13 @@ public class OurShots {
     public void addOurShot(OurShot newOurShot) {
         this.ourShots.add(newOurShot);
     }
+
+    public boolean isLastShotVertical() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public boolean isLastShotHorizontal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

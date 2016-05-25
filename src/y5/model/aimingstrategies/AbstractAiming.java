@@ -6,6 +6,7 @@
 package y5.model.aimingstrategies;
 
 import battleship.interfaces.Position;
+import y5.model.attacking.EnemyShip;
 import y5.model.attacking.EnemyShips;
 import y5.model.attacking.OurShot;
 import y5.model.attacking.OurShots;
@@ -20,5 +21,7 @@ public interface AbstractAiming {
     public int getAimLevel();
     public int getBoardSizeX();
     public int getBoardSizeY();
+    public int getCurrentVerticalHitAimingShots();
+    public int getCurrentHorizontalHitAimingShots();
     
 }

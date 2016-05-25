@@ -6,6 +6,7 @@
 package y5.model.aimingstrategies;
 
 import battleship.interfaces.Position;
+import y5.model.attacking.EnemyShip;
 import y5.model.attacking.EnemyShips;
 import y5.model.attacking.OurShot;
 import y5.model.attacking.OurShots;
@@ -57,36 +58,6 @@ public class AimingModeOne implements AbstractAiming {
         enemyShipsSinceLastNextTarget = enemyShips;
         return newShot;
     }
-    
-    
-//    /**
-//     * This returns the next target,calculated by the systematic aiming, with enemyShip knowledge gathered
-//     * @param ourShots
-//     * @param ourShotCurrent
-//     * @param enemyShips
-//     * @return OurSHot
-//     * @since 1.0.0
-//     */
-//    @Override
-//    public OurShot getNextTarget(OurShots ourShots, OurShot ourShotCurrent, EnemyShips enemyShips) {
-//        Newer version of Aiming Mode One
-//        OurShot newOurShot;
-//        if (isFirstHit) //If hit and first Aim Shot, go north
-//        
-//        Old version of Aiming Mode One
-//        if (ourShots.contains(previousShot.getNorthPosition()) || previousShot.getNorthPosition().equals(null)) {
-//            ourShotCurrent.setPosition(previousShot.getSouthPosition());
-//        } else if (ourShots.contains(previousShot.getSouthPosition()) || previousShot.getSouthPosition().equals(null)) {
-//            ourShotCurrent.setPosition(previousShot.getNorthPosition());
-//        } else if (ourShots.contains(previousShot.getEastPosition()) || previousShot.getEastPosition().equals(null)) {
-//            ourShotCurrent.setPosition(previousShot.getWestPosition());
-//        } else if (ourShots.contains(previousShot.getWestPosition()) || previousShot.getWestPosition().equals(null)) {
-//            ourShotCurrent.setPosition(previousShot.getEastPosition());
-//        }
-//            
-//            
-//        return newOurShot;
-//    }
 
     @Override
     public int getBoardSizeX() {
@@ -96,6 +67,16 @@ public class AimingModeOne implements AbstractAiming {
     @Override
     public int getBoardSizeY() {
         return this.boardSizeY;
+    }
+
+    @Override
+    public int getCurrentVerticalHitAimingShots() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getCurrentHorizontalHitAimingShots() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
