@@ -85,29 +85,28 @@ public class OurShots {
         return false;
     }
 
-    public int getCurrentVerticalHitShots(int currentRoundAimingShotsCount) {
-        int verticalHitShotsCount = 0;
-
-        for (int i = ourShots.size()-1; i >= ourShots.size()-currentRoundAimingShotsCount; i--) { //Rolls through our shots backwards, and finds the rows, where the last aiming shots were fired
-            if (ourShots.get(i).isHit() && ourShots.get(ourShots.size()-1).getPosition().x == ourShots.get(i).getPosition().x) { //Check's if our shot was a fired hit, and is same row as last fired shot
-                verticalHitShotsCount++; //increment a shot fired vertical for the last shots
-            }
-        }
+    public int getCurrentModeHitShots() {
         
-        return verticalHitShotsCount;
+        boolean isFirstModeShot = true;
+        int countCurrentHits = 0;
+        
+        for (int i = ourShots.size()-1; i >= 0; i--) {
+            if (ourShots.get(i).isModeChange()) {
+                if (isFirstModeShot) {
+                    return 0;
+                }
+                else {
+                    return countCurrentHits; //Decrements the final count, for not getting the north target, if existing with.
+                }
+            }
+            if (ourShots.get(i).isHit() && !isFirstModeShot) {
+                countCurrentHits++;
+            }
+            isFirstModeShot = false;
+        }
+        return countCurrentHits;
     }
 
-    public int getCurrentHorizontalHitShots(int currentRoundAimingShotsCount) {
-        int horizontalHitShotsCount = 0;
-
-        for (int i = ourShots.size()-1; i >= ourShots.size()-currentRoundAimingShotsCount; i--) { //Rolls through our shots backwards, and finds the rows, where the last aiming shots were fired
-            if (ourShots.get(i).isHit() && ourShots.get(ourShots.size()-1).getPosition().x == ourShots.get(i).getPosition().x) { //Check's if our shot was a fired hit, and is same row as last fired shot
-                horizontalHitShotsCount++;
-            }
-        }
-        
-        return horizontalHitShotsCount;
-    }
 
     public boolean containsPosition(Position position) {
         boolean isContaingPosition = false;
@@ -172,26 +171,6 @@ public class OurShots {
             }
         }
         return false;
-    }
-
-    public int countCurrentModeOuterBounderiesMisses() {
-        boolean isFirstModeShot = true;
-        int countCurrentMisses = 0;
-        for (int i = ourShots.size()-1; i >= 0; i--) {
-            if (ourShots.get(i).isModeChange()) {
-                if (isFirstModeShot) {
-                    return 0;
-                }
-                else {
-                    return countCurrentMisses; //Decrements the final count, for not getting the north target, if existing with.
-                }
-            }
-            if (!ourShots.get(i).isHit() && !isFirstModeShot) {
-                countCurrentMisses++;
-            }
-            isFirstModeShot = false;
-        }
-        return 0;
     }
     
 }

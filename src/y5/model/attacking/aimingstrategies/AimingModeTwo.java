@@ -5,6 +5,7 @@
  */
 package y5.model.attacking.aimingstrategies;
 
+import battleship.interfaces.Position;
 import y5.model.attacking.aimingstrategies.AbstractAiming;
 import y5.model.attacking.EnemyShips;
 import y5.model.attacking.OurShot;
@@ -88,6 +89,26 @@ public class AimingModeTwo implements AbstractAiming {
 
     @Override
     public boolean isTwoManyMisses() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Position getCurrentModeTopPosition() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Position getCurrentModeBottomPosition() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Position getCurrentModeRightEndPosition() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Position getCurrentModeLeftEndPosition() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -25,5 +25,9 @@ public interface AbstractAiming {
     public void setCurrentModeFirstShot(boolean isCurrentModeFirstShot);
     public boolean isEndOfMode();
     public boolean isTwoManyMisses();
+    public Position getCurrentModeTopPosition();
+    public Position getCurrentModeBottomPosition();
+    public Position getCurrentModeRightEndPosition();
+    public Position getCurrentModeLeftEndPosition();
     
 }

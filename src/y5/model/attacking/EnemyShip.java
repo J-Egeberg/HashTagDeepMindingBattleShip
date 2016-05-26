@@ -17,7 +17,7 @@ public class EnemyShip {
     private boolean vertical;
     private boolean aLive;
     private Position topPostion;
-    private Position leftPostion;
+    private Position rightPostion;
     private int tournamentHashCodeShip;
 
     public EnemyShip(int size, boolean vertical, boolean aLive, Position topPostion, Position leftPostion) {
@@ -25,17 +25,21 @@ public class EnemyShip {
         this.vertical = vertical;
         this.aLive = aLive;
         this.topPostion = topPostion;
-        this.leftPostion = leftPostion;
+        this.rightPostion = leftPostion;
     }
 
-    EnemyShip(int size, int hashCode) {
+    public EnemyShip(int size, int hashCode) {
         this.size = size;
         this.tournamentHashCodeShip = hashCode;
+        this.topPostion = null;
+        this.rightPostion = null;
+        this.aLive = true;
+        this.vertical = true;
     }
 
     @Override
     public String toString() {
-        return "EnemyShip{" + "size=" + size + ", vertical=" + vertical + ", aLive=" + aLive + ", topPostion=" + topPostion.toString() + ", leftPostion=" + leftPostion.toString() + ", tournamentHashCodeShip=" + tournamentHashCodeShip + '}';
+        return "EnemyShip{" + "size=" + size + ", vertical=" + vertical + ", aLive=" + aLive + ", tournamentHashCodeShip=" + tournamentHashCodeShip + '}';
     }
 
     public int getSize() {
@@ -71,11 +75,11 @@ public class EnemyShip {
     }
 
     public Position getLeftPostion() {
-        return leftPostion;
+        return rightPostion;
     }
 
-    public void setLeftPostion(Position leftPostion) {
-        this.leftPostion = leftPostion;
+    public void setRightPostion(Position rightPostion) {
+        this.rightPostion = rightPostion;
     }
 
     public int getTournamentHashCodeShip() {
