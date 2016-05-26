@@ -5,8 +5,6 @@
  */
 package y5.model.attacking.huntingstrategies;
 
-import y5.model.attacking.huntingstrategies.AbstractHunting;
-import battleship.interfaces.Position;
 import java.util.Random;
 import y5.model.attacking.EnemyShips;
 import y5.model.attacking.OurShot;
@@ -21,44 +19,25 @@ public class HuntingModeOne implements AbstractHunting {
     private int boardSizeX;
     private int boardSizeY;
     private Random rnd;
+    private int x;
+    private int y;
 
-    public HuntingModeOne(int sizeX, int sizeY) {
-        this.boardSizeX = sizeX;
-        this.boardSizeY = sizeY;
-        rnd = new Random();
+    public HuntingModeOne(int boardSizeX, int boardSizeY) {
+        this.boardSizeX = boardSizeX;
+        this.boardSizeY = boardSizeY;
+        this.rnd = new Random();
+    }
+
+    @Override
+    public OurShot getNextTarget(OurShots ourShots, OurShot ourShotPrevious, EnemyShips enemyShips) {
+        x = rnd.nextInt(boardSizeX); // Random returns a number between 0 and the size of the board
+        y = rnd.nextInt(boardSizeY); // Random returns a number between 0 and the size of the board
+        return new OurShot(x,y,ourShots.size());
     }
 
     @Override
     public int getHuntLevel() {
         return 1;
-    }
-
-    @Override
-    public OurShot getNextTarget(OurShots ourShots, OurShot ourShotCurrent, EnemyShips enemyShips) {
-        int x = 0;
-        int y = 0;
-        boolean isNotNewRandomPosition;
-        do { // Loops old shots, and finds new shot if previous
-            isNotNewRandomPosition = false;
-            x = rnd.nextInt(boardSizeX); //HuntingMode 1 - Random, except previous shots
-            y = rnd.nextInt(boardSizeY); //HuntingMode 1 - Tandom, except previous shots
-            if (ourShots.size() != 0) {
-                for (OurShot ourShot : ourShots.getOurShots()) {
-                    if (ourShot.getPosition().x == x) {
-                        if (ourShot.getPosition().y == y) {
-                            isNotNewRandomPosition = true;
-                        }
-                    }
-                    if (ourShot.getPosition().y == y) {
-                        if (ourShot.getPosition().x == x) {
-                            isNotNewRandomPosition = true;
-                        }
-                    }
-                }
-            }
-        } while (isNotNewRandomPosition); //Checks it is a new position
-
-        return new OurShot(x, y, ourShots.size()); //HuntingMode 1
     }
 
     @Override
@@ -70,5 +49,5 @@ public class HuntingModeOne implements AbstractHunting {
     public int getBoardSizeY() {
         return this.boardSizeY;
     }
-
+    
 }

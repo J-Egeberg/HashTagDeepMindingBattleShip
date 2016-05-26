@@ -108,7 +108,7 @@ public class OurShots {
     }
 
 
-    public boolean containsPosition(Position position) {
+    public boolean containsShotPosition(Position position) {
         boolean isContaingPosition = false;
         for (OurShot ourShot : ourShots) {
             if (ourShot.getPosition().x == position.x) {
@@ -171,6 +171,25 @@ public class OurShots {
             }
         }
         return false;
+    }
+
+    public void removeShot(OurShot removeThisOurShot) {
+        for (OurShot ourShot : ourShots) {
+            if (ourShot.getPosition().x == removeThisOurShot.getPosition().x) {
+                if (ourShot.getPosition().y == removeThisOurShot.getPosition().y) {
+                    ourShots.remove(ourShot);
+                }
+            }
+            if (ourShot.getPosition().y == removeThisOurShot.getPosition().y) {
+                if (ourShot.getPosition().x == removeThisOurShot.getPosition().x) {
+                    ourShots.remove(ourShot);
+                }
+            }
+        }
+    }
+
+    public OurShot getOurShot(int indexOfShot) {
+        return ourShots.get(indexOfShot);
     }
     
 }

@@ -4,7 +4,7 @@
  */
 package y5;
 
-import y5.model.attacking.huntingstrategies.HuntingModeOne;
+import y5.model.attacking.huntingstrategies.HuntingModeTwo;
 import y5.model.attacking.huntingstrategies.AbstractHunting;
 import y5.model.attacking.aimingstrategies.AbstractAiming;
 import y5.model.attacking.OurShots;
@@ -19,8 +19,12 @@ import battleship.interfaces.Board;
 import battleship.interfaces.Ship;
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.JOptionPane;
 import y5.model.attacking.aimingstrategies.AimingModeThree;
-import y5.model.attacking.huntingstrategies.HuntingModeTwo;
+import y5.model.attacking.huntingstrategies.HuntingModeFour;
+import y5.model.attacking.huntingstrategies.HuntingModeOne;
+import y5.model.attacking.huntingstrategies.HuntingModeThree;
+import y5.model.defending.placingstrategies.AbstractPlacing;
 
 /**
  *
@@ -32,8 +36,6 @@ public class Player implements BattleshipsPlayer {
     private int sizeX;
     private int sizeY;
     private Board myBoard;
-    private ArrayList<OurShip> ourShipPositionList;
-    private ArrayList<OurShot> ourShotPositionList;
     private int currentShotNumber; //Zero based number
     private boolean isHuntingMode;
     private boolean isAimingMode;
@@ -46,13 +48,11 @@ public class Player implements BattleshipsPlayer {
     private boolean isFirstShot;
     private int currentModeAimingShotsCount;
     private int currentModeHuntingShotsCount;
+    private ArrayList<OurShip> ourShipPositionList;
+    private AbstractPlacing placingStrategy;
 
     public Player() {
-        ourShotPositionList = new ArrayList();
-        ourShipPositionList = new ArrayList();
-        currentShotNumber = 0;
-        isHuntingMode = true;
-        isAimingMode = false;
+        //To Do
     }
 
     /**
@@ -73,15 +73,20 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void placeShips(Fleet fleet, Board board) {
+        
         myBoard = board;
         sizeX = board.sizeX();
         sizeY = board.sizeY();
         enemyShips = new EnemyShips();
         ourShots = new OurShots();
         aimingStrategy = new AimingModeThree(sizeX, sizeY);
-        huntingStrategy = new HuntingModeOne(sizeX, sizeY);
+        huntingStrategy = new HuntingModeFour(sizeX, sizeY);
         isFirstShot = true;
+        isHuntingMode = true;
+        isAimingMode = false;
+        ourShipPositionList = new ArrayList();
 
+        
         for (int i = 0; i < fleet.getNumberOfShips(); ++i) {
             Ship s = fleet.getShip(i);
             boolean vertical = rnd.nextBoolean();
@@ -152,8 +157,10 @@ public class Player implements BattleshipsPlayer {
                 pos = new Position(x, y);
 
             }
+
             board.placeShip(pos, s, vertical);
         }
+
     }
 
     /**
@@ -166,9 +173,7 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void incoming(Position pos) {
-        if (true) {
-            boolean setFalse = false;
-        }
+        // To do
     }
 
     /**
@@ -183,39 +188,42 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
-        this.enemyShips.setEnemyShipCountStatus(enemyShips.getNumberOfShips()); //Gets the enemy ship count to compare after shot.
-        if (isFirstShot) {
-            for (int i = 0; i < enemyShips.getNumberOfShips(); i++) {
-                this.enemyShips.addEnemyShip(enemyShips.getShip(i)); //Add's all the ships live in first round, to know the size's when checking what ship is dead.
-            }
-        }
-        
-        
-        if (isAimingMode) { // AimingMode
-            currentOurShot = aimingStrategy.getNextTarget(ourShots, currentOurShot, this.enemyShips);  //Get's the next target accourding to the set aimingstrategy
-            currentModeAimingShotsCount++;
-        }
-        
-        
-        boolean isModeChange = false;
-        if (aimingStrategy.isEndOfMode()) {
-            currentModeAimingShotsCount--;
-            isModeChange = true;
-        }
-
-        
-        if (isHuntingMode) { // Hunting mode
+        currentOurShot = null;
+//        
+//        
+//        this.enemyShips.setEnemyShipCountStatus(enemyShips.getNumberOfShips()); //Gets the enemy ship count to compare after shot.
+//        if (isFirstShot) {
+//            for (int i = 0; i < enemyShips.getNumberOfShips(); i++) {
+//                this.enemyShips.addEnemyShip(enemyShips.getShip(i)); //Add's all the ships live in first round, to know the size's when checking what ship is dead.
+//            }
+//        }
+//
+//
+//        if (isAimingMode) { // AimingMode
+//            currentOurShot = aimingStrategy.getNextTarget(ourShots, currentOurShot, this.enemyShips);  //Get's the next target accourding to the set aimingstrategy
+//            currentModeAimingShotsCount++;
+//        }
+//
+//
+//        boolean isModeChange = false;
+//        if (aimingStrategy.isEndOfMode()) {
+//            currentModeAimingShotsCount--;
+//            isModeChange = true;
+//        }
+//
+//
+//        if (isHuntingMode) { // Hunting mode
             currentOurShot = huntingStrategy.getNextTarget(ourShots, currentOurShot, this.enemyShips); //Get's the next target accourding to the set huntingstrategy
-            currentModeHuntingShotsCount++;
-        }
-        
-        
-        if (isModeChange) {
-            isHuntingMode = true;
-            isAimingMode = false;
-            currentOurShot.setIsModeChange(true);
-        }
-
+//            currentModeHuntingShotsCount++;
+//        }
+//
+//
+//        if (isModeChange) {
+//            isHuntingMode = true;
+//            isAimingMode = false;
+//            currentOurShot.setIsModeChange(true);
+//        }
+//            
         return currentOurShot.getPosition(); // giver koordinaterne tilbage til Battleship om hvor der skal skydes
     }
 
@@ -231,70 +239,71 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
-        enemyShips.getNumberOfShips(); //Gets the enemy ships count to found out of wrecked amount
+//        enemyShips.getNumberOfShips(); //Gets the enemy ships count to found out of wrecked amount
+//
+//        currentShotNumber++; //Increments the currentShotCount, Because being here is proff of shot is fired.
+//        isFirstShot = false; //Turns of the first shot checker, until next roud begins
+//        boolean isHit = hit; //Transfers hit status to local field
+//        currentOurShot.setHit(hit); //Sets the status of the hit, to the shot just fire above in getFireCoordinates.
+//        boolean isCurrentlyWrecked = false; //Stars a check for wrecking a ship.
 
-        currentShotNumber++; //Increments the currentShotCount, Because being here is proff of shot is fired.
-        isFirstShot = false; //Turns of the first shot checker, until next roud begins
-        boolean isHit = hit; //Transfers hit status to local field
-        currentOurShot.setHit(hit); //Sets the status of the hit, to the shot just fire above in getFireCoordinates.
-        boolean isCurrentlyWrecked = false; //Stars a check for wrecking a ship.
-
-        if (this.enemyShips.countLiveShips() > enemyShips.getNumberOfShips()) { //Checks if a enemyship i wrecked, and below wanna update all needed information to calculate on later for new aiming and hunting.
-            currentOurShot.setEnemyShipKillShot(hit); //Sets the status of the ship kill shot, the the shot just fired above.
-            isCurrentlyWrecked = true;
-            boolean isVerticalWrecked = false;
-            if (ourShots.isLastShotVertical()) { //Checks if last shot is vertical
-                isVerticalWrecked = true;
-            }
-            if (ourShots.isLastShotHorizontal()) { //Checks if last shot is horizontal
-                isVerticalWrecked = false;
-            }        
-            if (isVerticalWrecked) { //Checks if ship was vertical or horizontal wrecked  - Basicly here, we wanna save the wrecked ship in our know direction it died.
-                boolean isOneShipDown = true;
-                for (EnemyShip enemyShip : this.enemyShips.getEnemyShips()) { //Finds the correct size of the wrecked enemyShip in this's enemyShips
-                    if (enemyShip.isLive() && isOneShipDown) { //takes down a ship.
-                        enemyShip.setaLive(false);
-                        isOneShipDown = false;
-                        enemyShip.setTopPostion(aimingStrategy.getCurrentModeTopPosition());
-                    }
-                }
-            }
-            else {
-                boolean isOneShipDown = true;
-                for (EnemyShip enemyShip : this.enemyShips.getEnemyShips()) { //Finds the correct size of the wrecked enemyShip in this's enemyShips
-                    if (enemyShip.isLive() && isOneShipDown) { //Checks if the current hit aiming shots is 2, 3, 4 or 5 size
-                        enemyShip.setaLive(false);
-                        isOneShipDown = false;
-                        enemyShip.setRightPostion(aimingStrategy.getCurrentModeRightEndPosition());
-                        
-                    }
-                }
-            }
-        }
-        
-        if (isHuntingMode) {
-            currentOurShot.setIsHuntingMode(true);
-        }
-        if (isAimingMode) {
-            currentOurShot.setIsAimingMode(true);
-        }
-
-        if (isHuntingMode && isHit) { // Checks if there is hit and if we were hunting
-            currentModeAimingShotsCount = 0;
-            isAimingMode = true; //Goes into aiming mode
-            isHuntingMode = false; //Turns off hunting mode
-            aimingStrategy.setCurrentModeFirstShot(true);
-            currentOurShot.setIsModeChange(true);
-        }
-        
-        if (isAimingMode && isCurrentlyWrecked) { //Checks if ship is wrecked to go back into hunting
-            currentModeHuntingShotsCount = 0;
-            isAimingMode = false; //Turns off aiming mode
-            isHuntingMode = true; //Goes into hunting mode
-            currentOurShot.setIsModeChange(true);
-        }
-
-        ourShots.addOurShot(currentOurShot); //Saves our complete updated shot fired against enemyships in our list.
+//        if (this.enemyShips.countLiveShips() > enemyShips.getNumberOfShips()) { //Checks if a enemyship i wrecked, and below wanna update all needed information to calculate on later for new aiming and hunting.
+//            currentOurShot.setEnemyShipKillShot(hit); //Sets the status of the ship kill shot, the the shot just fired above.
+//            isCurrentlyWrecked = true;
+//            boolean isVerticalWrecked = false;
+//            if (ourShots.isLastShotVertical()) { //Checks if last shot is vertical
+//                isVerticalWrecked = true;
+//            }
+//            if (ourShots.isLastShotHorizontal()) { //Checks if last shot is horizontal
+//                isVerticalWrecked = false;
+//            }        
+//            if (isVerticalWrecked) { //Checks if ship was vertical or horizontal wrecked  - Basicly here, we wanna save the wrecked ship in our know direction it died.
+//                boolean isOneShipDown = true;
+//                for (EnemyShip enemyShip : this.enemyShips.getEnemyShips()) { //Finds the correct size of the wrecked enemyShip in this's enemyShips
+//                    if (enemyShip.isLive() && isOneShipDown) { //takes down a ship.
+//                        enemyShip.setaLive(false);
+//                        isOneShipDown = false;
+//                        enemyShip.setTopPostion(aimingStrategy.getCurrentModeTopPosition());
+//                    }
+//                }
+//            }
+//            else {
+//                boolean isOneShipDown = true;
+//                for (EnemyShip enemyShip : this.enemyShips.getEnemyShips()) { //Finds the correct size of the wrecked enemyShip in this's enemyShips
+//                    if (enemyShip.isLive() && isOneShipDown) { //Checks if the current hit aiming shots is 2, 3, 4 or 5 size
+//                        enemyShip.setaLive(false);
+//                        isOneShipDown = false;
+//                        enemyShip.setRightPostion(aimingStrategy.getCurrentModeRightEndPosition());
+//                        
+//                    }
+//                }
+//            }
+//            System.out.println("Hit Feedback recieved");
+//        }
+//        
+//        if (isHuntingMode) {
+//            currentOurShot.setIsHuntingMode(true);
+//        }
+//        if (isAimingMode) {
+//            currentOurShot.setIsAimingMode(true);
+//        }
+//
+//        if (isHuntingMode && isHit) { // Checks if there is hit and if we were hunting
+//            currentModeAimingShotsCount = 0;
+//            isAimingMode = true; //Goes into aiming mode
+//            isHuntingMode = false; //Turns off hunting mode
+//            aimingStrategy.setCurrentModeFirstShot(true);
+//            currentOurShot.setIsModeChange(true);
+//        }
+//        
+//        if (isAimingMode && isCurrentlyWrecked) { //Checks if ship is wrecked to go back into hunting
+//            currentModeHuntingShotsCount = 0;
+//            isAimingMode = false; //Turns off aiming mode
+//            isHuntingMode = true; //Goes into hunting mode
+//            currentOurShot.setIsModeChange(true);
+//        }
+//
+//        ourShots.addOurShot(currentOurShot); //Saves our complete updated shot fired against enemyships in our list.
     }
 
     /**
@@ -305,9 +314,7 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void startMatch(int rounds) {
-        if (true) {
-            boolean setFalse = false;
-        }
+        //To do
     }
 
     /**
@@ -318,7 +325,6 @@ public class Player implements BattleshipsPlayer {
     @Override
     public void startRound(int round) {
         currentShotNumber = 0;
-
     }
 
     /**
@@ -346,8 +352,6 @@ public class Player implements BattleshipsPlayer {
      */
     @Override
     public void endMatch(int won, int lost, int draw) {
-        if (true) {
-            boolean setFalse = false;
-        }
+        //To do
     }
 }

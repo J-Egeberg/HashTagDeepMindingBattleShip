@@ -40,16 +40,16 @@ public class AimingModeTwo implements AbstractAiming {
         
         OurShot newOurShot = null;
         
-        if (ourShots.containsPosition(ourShotCurrent.getNorthPosition()) || ourShotCurrent.getNorthPosition().equals(null)) {
+        if (ourShots.containsShotPosition(ourShotCurrent.getNorthPosition()) || ourShotCurrent.getNorthPosition().equals(null)) {
             newOurShot = new OurShot(ourShotCurrent.getSouthPosition(),ourShots.size());
             
-        } else if (ourShots.containsPosition(ourShotCurrent.getSouthPosition()) || ourShotCurrent.getSouthPosition().equals(null)) {
+        } else if (ourShots.containsShotPosition(ourShotCurrent.getSouthPosition()) || ourShotCurrent.getSouthPosition().equals(null)) {
             newOurShot = new OurShot(ourShotCurrent.getNorthPosition(),ourShots.size());
             
-        } else if (ourShots.containsPosition(ourShotCurrent.getEastPosition()) || ourShotCurrent.getEastPosition().equals(null)) {
+        } else if (ourShots.containsShotPosition(ourShotCurrent.getEastPosition()) || ourShotCurrent.getEastPosition().equals(null)) {
             newOurShot = new OurShot(ourShotCurrent.getWestPosition(),ourShots.size());
             
-        } else if (ourShots.containsPosition(ourShotCurrent.getWestPosition()) || ourShotCurrent.getWestPosition().equals(null)) {
+        } else if (ourShots.containsShotPosition(ourShotCurrent.getWestPosition()) || ourShotCurrent.getWestPosition().equals(null)) {
             newOurShot = new OurShot(ourShotCurrent.getEastPosition(),ourShots.size());
             
         }

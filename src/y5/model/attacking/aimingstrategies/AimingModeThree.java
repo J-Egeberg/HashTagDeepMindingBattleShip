@@ -89,7 +89,7 @@ public class AimingModeThree implements AbstractAiming {
             
             do { //Loop West and East positions, until it does not contain previous shots.
 
-                if (!ourShots.containsPosition(newOurShot.getPosition())) { //Checks if this new position is free and is north  direction
+                if (!ourShots.containsShotPosition(newOurShot.getPosition())) { //Checks if this new position is free and is north  direction
                     newOurShot = new OurShot(newOurShot.getPosition(), ourShots.size());  //in next shot, then shoot south = Strategy choice.
                     isFreePosition = true;
                 }
@@ -133,7 +133,7 @@ public class AimingModeThree implements AbstractAiming {
             
             do { //Loop West and East positions, until it does not contain previous shots.
 
-                if (!ourShots.containsPosition(newOurShot.getPosition())) { //Checks if this new position is free and is north  direction
+                if (!ourShots.containsShotPosition(newOurShot.getPosition())) { //Checks if this new position is free and is north  direction
                     newOurShot = new OurShot(newOurShot.getPosition(), ourShots.size());  //in next shot, then shoot south = Strategy choice.
                     isFreePosition = true;
                 }
