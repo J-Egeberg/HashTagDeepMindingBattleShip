@@ -20,6 +20,7 @@ import battleship.interfaces.Ship;
 import java.util.ArrayList;
 import java.util.Random;
 import y5.model.attacking.aimingstrategies.AimingModeThree;
+import y5.model.attacking.huntingstrategies.HuntingModeTwo;
 
 /**
  *
@@ -78,7 +79,7 @@ public class Player implements BattleshipsPlayer {
         enemyShips = new EnemyShips();
         ourShots = new OurShots();
         aimingStrategy = new AimingModeThree(sizeX, sizeY);
-        huntingStrategy = new HuntingModeOne(sizeX, sizeY);
+        huntingStrategy = new HuntingModeTwo(sizeX, sizeY);
         isFirstShot = true;
 
         for (int i = 0; i < fleet.getNumberOfShips(); ++i) {
