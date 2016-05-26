@@ -54,7 +54,7 @@ public class EnemyShip {
         this.vertical = vertical;
     }
 
-    public boolean isaLive() {
+    public boolean isLive() {
         return aLive;
     }
 

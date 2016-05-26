@@ -18,6 +18,8 @@ public class OurShot {
     private boolean isHit;
     private boolean isEnemyShipKillShot;
     private boolean isModeChange;
+    private boolean isHuntingMode;
+    private boolean isAimingMode;
 
     public OurShot(int x, int y, int shotNumber) {
         this.position = new Position(x,y);
@@ -25,6 +27,8 @@ public class OurShot {
         isHit = false;
         isModeChange = false;
         isEnemyShipKillShot = false;
+        isHuntingMode = false;
+        isAimingMode = false;
     }
 
     public OurShot(Position position, int shotNumber) {
@@ -33,6 +37,8 @@ public class OurShot {
         isHit = false;
         isModeChange = false;
         isEnemyShipKillShot = false;
+        isHuntingMode = false;
+        isAimingMode = false;
     }
 
     public Position getNorthPosition() {
@@ -73,11 +79,6 @@ public class OurShot {
         } else {
             return position;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "OurShot{" + "position=" + position.toString() + ", hit=" + isHit + ", shotNumber=" + shotNumber + ", enemyShipKillShot=" + isEnemyShipKillShot + '}';
     }
 
     public Position getPosition() {
@@ -125,6 +126,43 @@ public class OurShot {
     
     public void setIsModeChange(boolean isModeChange) {
         this.isModeChange = isModeChange;
+    }
+
+    public boolean isIsHit() {
+        return isHit;
+    }
+
+    public void setIsHit(boolean isHit) {
+        this.isHit = isHit;
+    }
+
+    public boolean isIsEnemyShipKillShot() {
+        return isEnemyShipKillShot;
+    }
+
+    public void setIsEnemyShipKillShot(boolean isEnemyShipKillShot) {
+        this.isEnemyShipKillShot = isEnemyShipKillShot;
+    }
+
+    public boolean isIsHuntingMode() {
+        return isHuntingMode;
+    }
+
+    public void setIsHuntingMode(boolean isHuntingMode) {
+        this.isHuntingMode = isHuntingMode;
+    }
+
+    public boolean isIsAimingMode() {
+        return isAimingMode;
+    }
+
+    public void setIsAimingMode(boolean isAimingMode) {
+        this.isAimingMode = isAimingMode;
+    }
+
+    @Override
+    public String toString() {
+        return "OurShot{" + "position=" + position.toString() + ", shotNumber=" + shotNumber + ", isHit=" + isHit + ", isEnemyShipKillShot=" + isEnemyShipKillShot + ", isModeChange=" + isModeChange + ", isHuntingMode=" + isHuntingMode + ", isAimingMode=" + isAimingMode + '}';
     }
 
 }

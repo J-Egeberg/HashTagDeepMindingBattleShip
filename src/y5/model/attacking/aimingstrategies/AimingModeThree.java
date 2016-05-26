@@ -5,11 +5,7 @@
  */
 package y5.model.attacking.aimingstrategies;
 
-import y5.model.attacking.aimingstrategies.AbstractAiming;
-import battleship.interfaces.Position;
-import java.util.ArrayList;
 import java.util.Random;
-import y5.model.attacking.EnemyShip;
 import y5.model.attacking.EnemyShips;
 import y5.model.attacking.OurShot;
 import y5.model.attacking.OurShots;
@@ -18,18 +14,19 @@ import y5.model.attacking.OurShots;
  *
  * @author scheldejonas
  */
-public class AimingModeOne implements AbstractAiming {
+public class AimingModeThree implements AbstractAiming {
     
     private OurShot ourShot;
-    private int boardSizeX;
-    private int boardSizeY;
+    private final int boardSizeX;
+    private final int boardSizeY;
     private int aimShotCount;
-    private OurShots currentModeShots;
     private EnemyShips currentModeEnemyShips;
     private boolean currentModeFirstShot;
-    private boolean isEndOfBoard;
+    private boolean isEndOfMode;
+    private int currentModeMisses;
+    private boolean isNextShotGoingNorthOrEast;
 
-    public AimingModeOne(int sizeX, int sizeY) {
+    public AimingModeThree(int sizeX, int sizeY) {
         this.boardSizeX = sizeX;
         this.boardSizeY = sizeY;
     }
@@ -54,32 +51,25 @@ public class AimingModeOne implements AbstractAiming {
         Random rnd = new Random();
         OurShot currentModeFirstOurShot = ourShots.getCurrentModeFirstShot();
         OurShot newOurShot = new OurShot(ourShotCurrent.getPosition(),ourShots.size());
-        boolean isNextShotGoingNorthOrEast;
         
         aimShotCount++;
         
         if (currentModeFirstShot) { //Checks for first Aim Shot
             aimShotCount = 1;
-            isEndOfBoard = false;
-            currentModeShots = new OurShots();
+            currentModeMisses = 0;
+            isEndOfMode = false;
             currentModeEnemyShips = enemyShips;
+            isNextShotGoingNorthOrEast = true;
             newOurShot = new OurShot(currentModeFirstOurShot.getNorthPosition(),ourShots.size()); //In second shot, after the hunting hit, therefrom shoot North  = Strategy choice.
             if (newOurShot.isNotPositioned()) { //Checks if it is top of the board, then we have to go south
                 newOurShot = new OurShot(currentModeFirstOurShot.getSouthPosition(),ourShots.size()); 
             }
         }
         
-        if ((aimShotCount & 1) == 0) { //Checks if the currentAimingMode is a even or odd number
-            isNextShotGoingNorthOrEast = false; //Then next (second aiming) shot is sent to south or west direction of first hit shot = Strategy choice
-        }
-        else {
-            isNextShotGoingNorthOrEast = true; //The next (first aiming) shot is sent to north or east direction of first hit shot = Strategy choice
-        }
-        
         if (!currentModeFirstShot && ourShots.getCurrentModeSecondShot().isHit()) { //Checks if not first shot and that first shot was a hit = Then a new vertical target is returned
             
             boolean isFreePosition = false;
-            int endOfBoardHit = 0;
+            int countOutOfBounds = 0;
             newOurShot = new OurShot(currentModeFirstOurShot.getPosition(),ourShots.size()); //This is the first hit shot from hunting mode change
             
             do { //Loop West and East positions, until it does not contain previous shots.
@@ -92,32 +82,31 @@ public class AimingModeOne implements AbstractAiming {
                 if (!isFreePosition) {
                     if (isNextShotGoingNorthOrEast) {
                         newOurShot = new OurShot(newOurShot.getNorthPosition(),ourShots.size()); //This is third shot, and north shot until free position
-                        if (newOurShot.isNotPositioned()) { //Checks if it is bottom of the board, then we have to go north
-                            isNextShotGoingNorthOrEast = true;
-                            endOfBoardHit++;
+                        if (newOurShot.isNotPositioned() || ourShots.isPositionPreviousMiss(newOurShot)) { //Checks if it is bottom of the board, then we have to go north
+                            isNextShotGoingNorthOrEast = false;
+                            countOutOfBounds++;
                         }
                     }
                     else {
                         newOurShot = new OurShot(newOurShot.getSouthPosition(),ourShots.size()); //This is the second shot, and south shot until free position
-                        if (newOurShot.isNotPositioned()) { //Checks if it is bottom of the board, then we have to go north
-                            isNextShotGoingNorthOrEast = false;
-                            endOfBoardHit++;
+                        if (newOurShot.isNotPositioned() || ourShots.isPositionPreviousMiss(newOurShot)) { //Checks if it is bottom of the board, then we have to go north
+                            isNextShotGoingNorthOrEast = true;
+                            countOutOfBounds++;
                         }
                     }
                 }
+                
+                if (countOutOfBounds == 2) {
+                    isEndOfMode = true;
+                }
 
-            } while (!isFreePosition && endOfBoardHit != 2); //Loops while it is false that there is a free position and while 2 ends of the board is touched.
-            
-            if (endOfBoardHit == 2) {
-                isEndOfBoard = true;
-            }
-            
+            } while (!isFreePosition && !isEndOfMode); //Loops while it is false that there is a free position and while 2 ends of the board is touched. 
         }
         
         if (!currentModeFirstShot && !ourShots.getCurrentModeSecondShot().isHit()) { //Checks if not first shot and that first shot was a miss = Then a new horizontal target is returned
             
             boolean isFreePosition = false;
-            int endOfBoardHit = 0;
+            int countOutOfBounds = 0;
             newOurShot = new OurShot(currentModeFirstOurShot.getPosition(),ourShots.size()); //This is the first hit shot from hunting mode change
             
             do { //Loop West and East positions, until it does not contain previous shots.
@@ -130,29 +119,28 @@ public class AimingModeOne implements AbstractAiming {
                 if (!isFreePosition) {
                     if (isNextShotGoingNorthOrEast) {
                         newOurShot = new OurShot(newOurShot.getEastPosition(),ourShots.size()); //This is the second shot, and south shot until free position
-                        if (newOurShot.isNotPositioned()) { //Checks if it is bottom of the board, then we have to go north
-                            isNextShotGoingNorthOrEast = true;
-                            endOfBoardHit++;
+                        if (newOurShot.isNotPositioned() || ourShots.isPositionPreviousMiss(newOurShot)) { //Checks if it is bottom of the board, then we have to go north
+                            isNextShotGoingNorthOrEast = false;
+                            countOutOfBounds++;
                         }
                     }
                     else {
                         newOurShot = new OurShot(newOurShot.getWestPosition(),ourShots.size()); //This is third shot, and north shot until free position
-                        if (newOurShot.isNotPositioned()) { //Checks if it is bottom of the board, then we have to go north
-                            isNextShotGoingNorthOrEast = false;
-                            endOfBoardHit++;
+                        if (newOurShot.isNotPositioned() || ourShots.isPositionPreviousMiss(newOurShot)) { //Checks if it is bottom of the board, then we have to go north
+                            isNextShotGoingNorthOrEast = true;
+                            countOutOfBounds++;
                         }
                     }
                 }
+                
+                if (countOutOfBounds == 2) {
+                    isEndOfMode = true;
+                }
 
-            } while (!isFreePosition && endOfBoardHit != 2); //Loops while it is false that there is a free position and while 2 ends of the board is touched.
-            
-            if (endOfBoardHit == 2) {
-                isEndOfBoard = true;
-            }
+            } while (!isFreePosition && !isEndOfMode); //Loops while it is false that there is a free position and while 2 ends of the board is touched.
         }   
 
         currentModeFirstShot = false;
-        currentModeShots.addOurShot(newOurShot); //Add's the shot to our currentModeShots, for check's later.
         
         return newOurShot;
     }
@@ -179,12 +167,15 @@ public class AimingModeOne implements AbstractAiming {
 
     @Override
     public boolean isEndOfMode() {
-        return this.isEndOfBoard;
+        return this.isEndOfMode;
     }
 
     @Override
     public boolean isTwoManyMisses() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (currentModeMisses == 2) {
+            return true;
+        }
+        return false;
     }
     
 }

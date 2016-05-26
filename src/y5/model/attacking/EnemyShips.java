@@ -76,5 +76,15 @@ public class EnemyShips {
     public int size() {
         return enemyShips.size();
     }
+
+    public int countLiveShips() {
+        int countLiveShips = 0;
+        for (EnemyShip enemyShip : this.enemyShips) {
+            if (enemyShip.isLive()) {
+                countLiveShips++;
+            }
+        }
+        return countLiveShips;
+    }
     
 }

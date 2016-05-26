@@ -68,11 +68,21 @@ public class OurShots {
     }
 
     public boolean isLastShotVertical() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int lastShotX = ourShots.get(ourShots.size()-1).getPosition().x;
+        int secondLastShotX = ourShots.get(ourShots.size()-2).getPosition().x;
+        if (lastShotX == secondLastShotX) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isLastShotHorizontal() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int lastShotY = ourShots.get(ourShots.size()-1).getPosition().y;
+        int secondLastShotY = ourShots.get(ourShots.size()-2).getPosition().y;
+        if (lastShotY == secondLastShotY) {
+            return true;
+        }
+        return false;
     }
 
     public int getCurrentVerticalHitShots(int currentRoundAimingShotsCount) {
@@ -116,13 +126,72 @@ public class OurShots {
         return isContaingPosition;
     }
 
+    public OurShot getCurrentModeSecondShot() {
+        boolean isFirstModeShot = true;
+        for (int i = ourShots.size()-1; i >= 0; i--) {
+            if (ourShots.get(i).isModeChange()) {
+                if (isFirstModeShot) {
+                    return ourShots.get(i);
+                }
+                else {
+                    return ourShots.get(i+1);
+                }
+            }
+            isFirstModeShot = false;
+        }
+        return ourShots.get(0);
+    }
+
     public OurShot getCurrentModeFirstShot() {
-        for (int i = ourShots.size()-1; i > 0; i--) {
+        for (int i = ourShots.size()-1; i >= 0; i--) {
             if (ourShots.get(i).isModeChange()) {
                 return ourShots.get(i);
             }
         }
         return ourShots.get(0);
+    }
+
+    public boolean isPositionPreviousMiss(OurShot newOurShot) {
+        if (newOurShot.getPosition() == null) {
+            return false;
+        }
+        for (OurShot ourShot : ourShots) {
+            if (ourShot.getPosition().x == newOurShot.getPosition().x) {
+                if (ourShot.getPosition().y == newOurShot.getPosition().y) {
+                    if (!ourShot.isHit()) {
+                        return true;
+                    }
+                }
+            }
+            if (ourShot.getPosition().y == newOurShot.getPosition().y) {
+                if (ourShot.getPosition().x == newOurShot.getPosition().x) {
+                    if (!ourShot.isHit()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public int countCurrentModeOuterBounderiesMisses() {
+        boolean isFirstModeShot = true;
+        int countCurrentMisses = 0;
+        for (int i = ourShots.size()-1; i >= 0; i--) {
+            if (ourShots.get(i).isModeChange()) {
+                if (isFirstModeShot) {
+                    return 0;
+                }
+                else {
+                    return countCurrentMisses; //Decrements the final count, for not getting the north target, if existing with.
+                }
+            }
+            if (!ourShots.get(i).isHit() && !isFirstModeShot) {
+                countCurrentMisses++;
+            }
+            isFirstModeShot = false;
+        }
+        return 0;
     }
     
 }

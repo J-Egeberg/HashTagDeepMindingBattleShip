@@ -23,5 +23,7 @@ public interface AbstractAiming {
     public int getBoardSizeY();
     public boolean isCurrentModeFirstShot();
     public void setCurrentModeFirstShot(boolean isCurrentModeFirstShot);
+    public boolean isEndOfMode();
+    public boolean isTwoManyMisses();
     
 }

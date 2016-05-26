@@ -19,6 +19,7 @@ public class AimingModeTwo implements AbstractAiming {
     private int boardSizeX;
     private int boardSizeY;
     private boolean currentModeFirstShot;
+    private boolean isEndOfBoard;
 
     public AimingModeTwo(int boardSizeX, int boardSizeY) {
         this.boardSizeX = boardSizeX;
@@ -78,6 +79,16 @@ public class AimingModeTwo implements AbstractAiming {
     @Override
     public void setCurrentModeFirstShot(boolean isCurrentModeFirstShot) {
         currentModeFirstShot = isCurrentModeFirstShot;
+    }
+
+    @Override
+    public boolean isEndOfMode() {
+        return this.isEndOfBoard;
+    }
+
+    @Override
+    public boolean isTwoManyMisses() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
