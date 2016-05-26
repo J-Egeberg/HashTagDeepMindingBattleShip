@@ -79,7 +79,7 @@ public class Player implements BattleshipsPlayer {
         enemyShips = new EnemyShips();
         ourShots = new OurShots();
         aimingStrategy = new AimingModeThree(sizeX, sizeY);
-        huntingStrategy = new HuntingModeTwo(sizeX, sizeY);
+        huntingStrategy = new HuntingModeOne(sizeX, sizeY);
         isFirstShot = true;
 
         for (int i = 0; i < fleet.getNumberOfShips(); ++i) {

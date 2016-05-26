@@ -19,11 +19,17 @@ public class HuntingModeTwo implements AbstractHunting {
     private int boardSizeX;
     private int boardSizeY;
     private Random rnd;
+    private int round;
+    private int roundDoubleIncreaser;
+    private int roundDoubleDecreaser;
 
     public HuntingModeTwo(int boardSizeX, int boardSizeY) {
         this.boardSizeX = boardSizeX;
         this.boardSizeY = boardSizeY;
         rnd = new Random();
+        round = 0;
+        roundDoubleIncreaser = 0;
+        roundDoubleDecreaser = 9;
     }
 
     @Override
@@ -32,27 +38,18 @@ public class HuntingModeTwo implements AbstractHunting {
         int x = 0;
         int y = 0;
         boolean isNotNewPosition;
-        int round = 0;
-        int roundDoubleIncreaser = 0;
-        int roundDoubleDecreaser = 9;
         
         do { // Loops old shots, and finds new shot if previous
             isNotNewPosition = false;
             
-            x = roundDoubleIncreaser;
-            y = roundDoubleIncreaser;
-            
-            if (0 < round && round < 4) { //If x is even
-                x = roundDoubleIncreaser+2;
-                y = roundDoubleIncreaser+2;
-                round++;
+            if (x < 9) {
+                x += 2;
             }
-            else if (4 < round && round < 9) {
-                x = roundDoubleDecreaser;
-                y = roundDoubleIncreaser;
-                round++;
+            else if (x == 9) {
+                y += 1;
+                x = 0;
             }
-            else {
+            else if (y == 9) {
                 x = rnd.nextInt(boardSizeX); //HuntingMode 1 - Random, except previous shots
                 y = rnd.nextInt(boardSizeY); //HuntingMode 1 - Tandom, except previous shots
             }
@@ -73,6 +70,8 @@ public class HuntingModeTwo implements AbstractHunting {
             
         } while (isNotNewPosition); //Checks it is a new position
 
+        round++;
+        
         return new OurShot(x, y, ourShots.size()); //HuntingMode 1
     }
 
