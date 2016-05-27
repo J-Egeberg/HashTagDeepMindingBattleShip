@@ -118,6 +118,8 @@ public class AimingModeThree implements AbstractAiming {
                 if (countOutOfBounds == 2) {
                     isThisTheTopOfTheShip = true;
                     isCurrentModeSecondShotHit = true;
+                    isNextShotGoingNorthOrEast = false;
+                    countOutOfBounds = 0;
                 }
    
 

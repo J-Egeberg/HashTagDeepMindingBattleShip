@@ -207,6 +207,8 @@ public class Player implements BattleshipsPlayer {
         if (aimingStrategy.isEndOfMode()) {
             currentModeAimingShotsCount--;
             isModeChange = true;
+            isHuntingMode = true;
+            isAimingMode = false;
         }
 
 
@@ -217,8 +219,6 @@ public class Player implements BattleshipsPlayer {
 
 
         if (isModeChange) {
-            isHuntingMode = true;
-            isAimingMode = false;
             currentOurShot.setIsModeChange(true);
         }
             
