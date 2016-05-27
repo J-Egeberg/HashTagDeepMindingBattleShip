@@ -174,17 +174,23 @@ public class OurShots {
     }
 
     public void removeShot(OurShot removeThisOurShot) {
+        
+        OurShot shotForRemoval = null;
+        
         for (OurShot ourShot : ourShots) {
             if (ourShot.getPosition().x == removeThisOurShot.getPosition().x) {
                 if (ourShot.getPosition().y == removeThisOurShot.getPosition().y) {
-                    ourShots.remove(ourShot);
+                    shotForRemoval = ourShot;
                 }
             }
             if (ourShot.getPosition().y == removeThisOurShot.getPosition().y) {
                 if (ourShot.getPosition().x == removeThisOurShot.getPosition().x) {
-                    ourShots.remove(ourShot);
+                    shotForRemoval = ourShot;
                 }
             }
+        }
+        if (shotForRemoval != null) {
+            ourShots.remove(shotForRemoval);
         }
     }
 
